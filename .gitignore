@@ -1,10 +1,8 @@
-# Arquivo .gitignore para projetos .NET
-
-# Pastas de Build (Obrigatório ignorar)
+# Pastas de Build
 [Bb]in/
 [Oo]bj/
 
-# Arquivos de IDE e Usuário (Obrigatório ignorar)
+# Arquivos de IDE e Usuário
 .vs/
 *.suo
 *.user
@@ -12,8 +10,7 @@
 *.sln.docstates
 .idea/
 
-# SEGREDOS (O MAIS IMPORTANTE!)
-# Nunca suba sua senha real
+# SEGREDOS
 appsettings.Development.json
 secrets.json
 
