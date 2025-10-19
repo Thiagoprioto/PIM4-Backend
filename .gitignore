@@ -1,0 +1,30 @@
+# Arquivo .gitignore para projetos .NET
+
+# Pastas de Build (Obrigatório ignorar)
+[Bb]in/
+[Oo]bj/
+
+# Arquivos de IDE e Usuário (Obrigatório ignorar)
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.idea/
+
+# SEGREDOS (O MAIS IMPORTANTE!)
+# Nunca suba sua senha real
+appsettings.Development.json
+secrets.json
+
+# Logs e Backups
+*.log
+*.backup
+
+# Arquivos de Banco de Dados local
+*.mdf
+*.ldf
+
+# Arquivos de Sistema Operacional
+Thumbs.db
+.DS_Store
