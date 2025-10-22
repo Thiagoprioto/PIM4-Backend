@@ -11,7 +11,7 @@ namespace PIM4_backend.Services
 
         public FAQService()
         {
-            // Dados iniciais de FAQ (podem ser expandidos)
+            // Dados iniciais de FAQ
 
             
             _faqs.Add(new FAQ { IdFaq = 1, Pergunta = "Como resetar senha?", Resposta = "Solicite ao técnico ou use a opção 'esqueci senha' no portal." });

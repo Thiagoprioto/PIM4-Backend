@@ -1,6 +1,4 @@
-﻿// Arquivo: PIM4-backend/Services/ChamadoService.cs
-
-using PIM4_backend.Models;
+﻿using PIM4_backend.Models;
 using PIM4_backend.Services;
 
 namespace PIM4_backend.Services
@@ -12,12 +10,12 @@ namespace PIM4_backend.Services
 
         public ChamadoService()
         {
-            // seed com nenhum chamado — você pode adicionar se quiser
+            // seed com nenhum chamado
         }
 
         public Chamado Create(Chamado chamado)
         {
-            // CORREÇÃO: Propriedade 'IdChamado'
+            // Propriedade 'IdChamado'
             chamado.IdChamado = _nextId++;
             chamado.DataAbertura = DateTime.UtcNow;
             _chamados.Add(chamado);
@@ -27,7 +25,7 @@ namespace PIM4_backend.Services
         public IEnumerable<Chamado> GetAll() => _chamados;
 
         public Chamado? GetById(int id) =>
-            // CORREÇÃO: Propriedade 'IdChamado'
+            // Propriedade 'IdChamado'
             _chamados.FirstOrDefault(c => c.IdChamado == id);
 
         public Chamado? UpdateStatus(int id, string status)

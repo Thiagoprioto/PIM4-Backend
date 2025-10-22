@@ -1,6 +1,4 @@
-﻿// Arquivo: PIM4-backend/Data/ApplicationDbContext.cs
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PIM4_backend.Models;
 
 namespace PIM4_backend.Data

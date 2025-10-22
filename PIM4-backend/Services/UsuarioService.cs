@@ -1,13 +1,10 @@
-﻿// Arquivo: PIM4-backend/Services/UsuarioService.cs
-
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using PIM4_backend.Models;
 using PIM4_backend.Services;
 
 namespace PIM4_backend.Services
 {
-    // Serviço em memória para simular persistência.
     public class UsuarioService : IUsuarioService
     {
         private readonly List<Usuario> _usuarios = new();
@@ -24,7 +21,7 @@ namespace PIM4_backend.Services
         public Usuario Create(Usuario user)
         {
             
-            user.IdUsuario = _nextId++; // Trocado de 'Id' para 'IdUsuario'
+            user.IdUsuario = _nextId++;
 
             if (string.IsNullOrWhiteSpace(user.SenhaHash))
             {
@@ -38,7 +35,7 @@ namespace PIM4_backend.Services
 
         public Usuario? GetById(int id) =>
             
-            _usuarios.FirstOrDefault(u => u.IdUsuario == id); // Trocado de 'u.Id' para 'u.IdUsuario'
+            _usuarios.FirstOrDefault(u => u.IdUsuario == id);
 
         public Usuario? Authenticate(string email, string senha)
         {

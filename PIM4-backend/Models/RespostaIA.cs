@@ -21,7 +21,7 @@ namespace PIM4_backend.Models
 
         public DateTime DataGeracao { get; set; } = DateTime.UtcNow;
 
-        // Pode ser usado para guardar ID da execução no N8N (se você quiser rastrear)
+        // Pode ser usado para guardar ID da execução no N8N
         [MaxLength(200)]
         public string? IdExecucaoN8N { get; set; }
     }

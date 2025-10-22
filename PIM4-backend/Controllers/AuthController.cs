@@ -1,4 +1,4 @@
-﻿// Arquivo: PIM4-backend/Controllers/AuthController.cs
+﻿
 
 using PIM4_backend.DTO;
 using PIM4_backend.Services;
@@ -23,7 +23,7 @@ namespace PIM4_backend.Controllers
             var user = _usuarioService.Authenticate(dto.Email, dto.Senha);
             if (user == null) return Unauthorized(new { message = "Credenciais inválidas" });
 
-            // Geramos um token fictício (GUID). Substituir por JWT real quando quiser integrar autenticação.
+            // Geramos um token fictício (GUID).
             var token = Guid.NewGuid().ToString();
 
             return Ok(new

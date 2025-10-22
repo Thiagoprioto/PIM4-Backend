@@ -1,6 +1,4 @@
-﻿// Arquivo: PIM4-backend/Controllers/ChamadosController.cs
-
-using PIM4_backend.DTO;
+﻿using PIM4_backend.DTO;
 using PIM4_backend.Models;
 using PIM4_backend.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -47,20 +45,18 @@ namespace PIM4_backend.Controllers
                 Titulo = dto.Titulo,
                 Descricao = dto.Descricao,
 
-                // 👇 CORREÇÃO AQUI (usando o nome do Model 'Chamado.cs') 👇
+                
                 IdUsuarioSolicitante = dto.UsuarioId,
 
                 Prioridade = dto.Prioridade,
 
-                // 👇 CORREÇÃO AQUI (usando o nome do Model e a lógica do Service) 👇
-                IdStatus = 1, // Assumindo 1 = "Aberto" (conforme lógica do ChamadoService)
+                IdStatus = 1, // Assumindo 1 = "Aberto"
 
                 DataAbertura = DateTime.UtcNow
             };
 
             var created = _chamadoService.Create(chamado);
 
-            // 👇 CORREÇÃO AQUI (usando 'IdChamado' do Model) 👇
             return CreatedAtAction(nameof(GetById), new { id = created.IdChamado }, ToDTO(created));
         }
 
