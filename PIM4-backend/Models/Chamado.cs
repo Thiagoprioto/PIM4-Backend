@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PIM4_backend.Models; // (Verifique se o namespace de Usuario está aqui, se for diferente)
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,42 +12,36 @@ namespace PIM4_backend.Models
         public int IdChamado { get; set; }
 
         [Required]
-        [MaxLength(150)]
-        public string Titulo { get; set; } = null!;
+        [StringLength(150)]
+        public string Titulo { get; set; }
 
-        [MaxLength(500)]
-        public string? Descricao { get; set; }
+        public string Descricao { get; set; }
 
-        [Required]
-        public string Prioridade { get; set; } = "Normal"; // Baixa, Normal, Alta
+        public int Prioridade { get; set; }
 
-        public DateTime DataAbertura { get; set; } = DateTime.UtcNow;
+        public DateTime DataAbertura { get; set; }
         public DateTime? DataFechamento { get; set; }
 
-        // Categoria
-        [ForeignKey(nameof(Categoria))]
         public int IdCategoria { get; set; }
-        public Categoria? Categoria { get; set; }
+        [ForeignKey("IdCategoria")]
+        public virtual Categoria Categoria { get; set; }
 
-        // Usuário solicitante
-        [ForeignKey(nameof(UsuarioSolicitante))]
-        public int IdUsuarioSolicitante { get; set; }
-        public Usuario? UsuarioSolicitante { get; set; }
-
-        // Técnico responsável
-        [ForeignKey(nameof(TecnicoResponsavel))]
-        public int? IdTecnicoResponsavel { get; set; }
-        public Usuario? TecnicoResponsavel { get; set; }
-
-        // Status
-        [ForeignKey(nameof(StatusChamado))]
         public int IdStatus { get; set; }
-        public StatusChamado? StatusChamado { get; set; }
+        [ForeignKey("IdStatus")]
+        public virtual StatusChamado StatusChamado { get; set; }
 
-        // Interações (se existir)
-        public ICollection<Interacao>? Interacoes { get; set; }
+        public int IdUsuarioSolicitante { get; set; }
 
-        // IA (um chamado pode ter várias respostas IA)
-        public ICollection<RespostaIA>? RespostasIA { get; set; }
+        [ForeignKey("IdUsuarioSolicitante")]
+        public virtual Usuario UsuarioSolicitante { get; set; }
+        // -------------------------
+
+        // (Isto já estava correto e é ótimo!)
+        public int? IdTecnicoResponsavel { get; set; }
+        [ForeignKey("IdTecnicoResponsavel")]
+        public virtual Usuario TecnicoResponsavel { get; set; }
+
+        public virtual ICollection<RespostaIA> RespostasIA { get; set; }
+        public virtual ICollection<Interacao> Interacoes { get; set; }
     }
 }

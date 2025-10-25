@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using PIM4_backend.Models;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PIM4_backend.Models
@@ -9,14 +10,11 @@ namespace PIM4_backend.Models
         public int IdStatus { get; set; }
 
         [Required]
-        [MaxLength(100)]
-        public string Nome { get; set; } = null!; // Ex: "Aberto", "Em andamento", "Fechado"
-
-        [MaxLength(255)]
-        public string? Descricao { get; set; }
-
-        // Relacionamento com Chamados
-        public ICollection<Chamado>? Chamados { get; set; }
+        [StringLength(50)]
+        public string Nome { get; set; }
+        [StringLength(255)]
+        public string Descricao { get; set; }
+        public virtual ICollection<Chamado> Chamados { get; set; }
     }
 }
 

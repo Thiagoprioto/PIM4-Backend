@@ -1,10 +1,9 @@
-﻿namespace PIM4_backend.DTO
+﻿public class UsuarioDTO
 {
-    public class UsuarioDTO
-    {
-        public int Id { get; set; }
-        public string Nome { get; set; } = null!;
-        public string Email { get; set; } = null!;
-        public string Perfil { get; set; } = null!;
-    }
+    public int IdUsuario { get; set; }
+    public string Nome { get; set; }
+    public string Email { get; set; }
+    public string SenhaHash { get; set; }
+    public string Perfil { get; set; }
+    public int? IdDepartamento { get; set; }
 }

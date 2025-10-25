@@ -1,18 +1,18 @@
-﻿using PIM4_backend.Models;
+﻿using System;
 
-namespace PIM4_backend.DTO
+namespace PIM4_Backend.DTOs
 {
     public class ChamadoDTO
     {
-        public int Id { get; set; }
-        public string Titulo { get; set; } = null!;
-        public string? Descricao { get; set; }
-        public string Status { get; set; } = null!;
+        public int IdChamado { get; set; }
+        public string Titulo { get; set; }
+        public string Descricao { get; set; }
+        public string Prioridade { get; set; }
         public DateTime DataAbertura { get; set; }
-        public int UsuarioId { get; set; }
-        public int? TecnicoId { get; set; }
-        public string Prioridade { get; set; } = null!;
-        public List<Interacao> Interacoes { get; set; } = new();
+        public DateTime? DataFechamento { get; set; }
+        public int? IdCategoria { get; set; }
+        public int IdUsuarioSolicitante { get; set; }
+        public int? IdTecnicoResponsavel { get; set; }
+        public int? IdStatus { get; set; }
     }
 }
-

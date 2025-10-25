@@ -1,17 +1,20 @@
 ﻿using PIM4_backend.Models;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-public class Departamento
+namespace PIM4_backend.Models
 {
-    [Key]
-    public int IdDepartamento { get; set; }
+    public class Departamento
+    {
+        [Key]
+        public int IdDepartamento { get; set; }
 
-    [Required]
-    [MaxLength(150)]
-    public string Nome { get; set; } = null!;
+        [Required]
+        [StringLength(100)]
+        public string Nome { get; set; }
 
-    [MaxLength(300)]
-    public string? Descricao { get; set; }
-
-    public ICollection<Usuario>? Usuarios { get; set; }
+        [StringLength(255)]
+        public string Descricao { get; set; }
+        public virtual ICollection<Usuario> Usuarios { get; set; }
+    }
 }

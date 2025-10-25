@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PIM4_backend.Models;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,20 +10,15 @@ namespace PIM4_backend.Models
         [Key]
         public int IdInteracao { get; set; }
 
-        // Chamado relacionado
-        [ForeignKey(nameof(Chamado))]
-        public int IdChamado { get; set; }
-        public Chamado? Chamado { get; set; }
+        public string Mensagem { get; set; }
+        public DateTime DataInteracao { get; set; }
 
-        // Autor (usuário ou técnico)
-        [ForeignKey(nameof(Autor))]
         public int IdAutor { get; set; }
-        public Usuario? Autor { get; set; }
+        [ForeignKey("IdAutor")]
+        public virtual Usuario Autor { get; set; }
 
-        [Required]
-        [MaxLength(1000)]
-        public string Mensagem { get; set; } = null!;
-
-        public DateTime DataInteracao { get; set; } = DateTime.UtcNow;
+        public int IdChamado { get; set; }
+        [ForeignKey("IdChamado")]
+        public virtual Chamado Chamado { get; set; }
     }
 }

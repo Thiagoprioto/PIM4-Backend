@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using PIM4_backend.Models; // (Verifique se o namespace de Chamado está aqui, se for diferente)
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,30 +11,32 @@ namespace PIM4_backend.Models
         public int IdUsuario { get; set; }
 
         [Required]
-        [MaxLength(150)]
-        public string Nome { get; set; } = null!;
+        [StringLength(150)]
+        public string Nome { get; set; }
 
         [Required]
-        [EmailAddress]
-        [MaxLength(200)]
-        public string Email { get; set; } = null!;
+        [StringLength(150)]
+        public string Email { get; set; }
 
         [Required]
-        public string SenhaHash { get; set; } = null!;
+        public string SenhaHash { get; set; }
 
-        [Required]
-        [MaxLength(50)]
-        public string Perfil { get; set; } = "Usuario"; // Admin, Tecnico, Usuario
+        [StringLength(50)]
+        public string Perfil { get; set; }
 
-        // (opcional) Departamento
-        [ForeignKey(nameof(Departamento))]
-        public int? IdDepartamento { get; set; }
-        public Departamento? Departamento { get; set; }
+        public int IdDepartamento { get; set; }
 
-        // Relacionamentos
-        public ICollection<Chamado>? ChamadosAbertos { get; set; }         // como solicitante
-        public ICollection<Chamado>? ChamadosAtribuidos { get; set; }     // como técnico
-        public ICollection<Interacao>? Interacoes { get; set; }
-        public ICollection<LogAtividade>? LogsAtividades { get; set; }
+        [ForeignKey("IdDepartamento")]
+        public virtual Departamento Departamento { get; set; }
+
+        public virtual ICollection<LogAtividade> LogsAtividades { get; set; }
+
+        public virtual ICollection<Interacao> Interacoes { get; set; }
+
+        [InverseProperty("UsuarioSolicitante")]
+        public virtual ICollection<Chamado> ChamadosAbertos { get; set; }
+
+        [InverseProperty("TecnicoResponsavel")]
+        public virtual ICollection<Chamado> ChamadosAtribuidos { get; set; }
     }
 }

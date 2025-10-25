@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PIM4_backend.Models;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,20 +8,19 @@ namespace PIM4_backend.Models
     public class LogAtividade
     {
         [Key]
-        public int IdLog { get; set; }
-
-        [ForeignKey(nameof(Usuario))]
-        public int IdUsuario { get; set; }
-        public Usuario? Usuario { get; set; }
+        public long IdLog { get; set; }
 
         [Required]
-        [MaxLength(255)]
-        public string Acao { get; set; } = null!; // Ex: "Chamado criado", "Login", "Status alterado"
+        [StringLength(100)]
+        public string Acao { get; set; }
 
-        public DateTime DataAcao { get; set; } = DateTime.UtcNow;
+        public DateTime DataAcao { get; set; }
 
-        [MaxLength(50)]
-        public string? EnderecoIP { get; set; }
+        [StringLength(50)]
+        public string EnderecoIP { get; set; }
+
+        public int IdUsuario { get; set; }
+        [ForeignKey("IdUsuario")]
+        public virtual Usuario Usuario { get; set; }
     }
 }
-

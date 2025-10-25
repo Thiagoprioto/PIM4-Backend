@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using PIM4_backend.Data;
-using PIM4_backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,11 +10,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Adiciona os controladores
 builder.Services.AddControllers();
-
-// Registra os serviços
-builder.Services.AddScoped<IUsuarioService, UsuarioService>();
-builder.Services.AddScoped<IChamadoService, ChamadoService>();
-builder.Services.AddScoped<IFAQService, FAQService>();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();

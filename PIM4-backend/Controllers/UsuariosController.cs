@@ -1,7 +1,6 @@
-﻿using PIM4_backend.Models;
-using PIM4_backend.Services;
-using Microsoft.AspNetCore.Mvc;
-using PIM4_backend.DTO;
+﻿using Microsoft.AspNetCore.Mvc;
+using PIM4_backend.Data;
+using PIM4_backend.Models;
 
 namespace PIM4_backend.Controllers
 {
@@ -9,45 +8,71 @@ namespace PIM4_backend.Controllers
     [Route("api/[controller]")]
     public class UsuariosController : ControllerBase
     {
-        private readonly IUsuarioService _usuarioService;
+        private readonly ApplicationDbContext _context;
 
-        public UsuariosController(IUsuarioService usuarioService)
+        public UsuariosController(ApplicationDbContext context)
         {
-            _usuarioService = usuarioService;
+            _context = context;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<UsuarioDTO>> GetAll()
-        {
-            var users = _usuarioService.GetAll().Select(u => new UsuarioDTO { Id = u.IdUsuario, Nome = u.Nome, Email = u.Email, Perfil = u.Perfil });
-            return Ok(users);
-        }
+        public IActionResult GetAll() => Ok(_context.Usuarios.ToList());
 
-        [HttpGet("{id:int}")]
-        public ActionResult<UsuarioDTO> GetById(int id)
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
         {
-            var u = _usuarioService.GetById(id);
-            if (u == null) return NotFound();
-            return Ok(new UsuarioDTO { Id = u.IdUsuario, Nome = u.Nome, Email = u.Email, Perfil = u.Perfil });
+            var usuario = _context.Usuarios.Find(id);
+            return usuario == null ? NotFound() : Ok(usuario);
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] Usuario usuario)
+        public IActionResult Create(Usuario usuario)
         {
-            var created = _usuarioService.Create(usuario);
-            return CreatedAtAction(nameof(GetById), new { id = created.IdUsuario }, new UsuarioDTO { Id = created.IdUsuario, Nome = created.Nome, Email = created.Email, Perfil = created.Perfil });
+            _context.Usuarios.Add(usuario);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(GetById), new { id = usuario.IdUsuario }, usuario);
         }
 
-        [HttpGet("por-perfil/{perfil}")]
-        public ActionResult<IEnumerable<UsuarioDTO>> GetByPerfil(string perfil)
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, Usuario usuario)
         {
-            var users = _usuarioService.GetAll()
-                .Where(u => u.Perfil.Equals(perfil, StringComparison.OrdinalIgnoreCase))
-                .Select(u => new UsuarioDTO { Id = u.IdUsuario, Nome = u.Nome, Email = u.Email, Perfil = u.Perfil });
+            var existing = _context.Usuarios.Find(id);
+            if (existing == null) return NotFound();
 
-            if (!users.Any()) return NotFound(new { message = "Nenhum usuário encontrado com esse perfil." });
+            _context.Entry(existing).CurrentValues.SetValues(usuario);
+            _context.SaveChanges();
+            return Ok(usuario);
+        }
 
-            return Ok(users);
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var usuario = _context.Usuarios.Find(id);
+            if (usuario == null) return NotFound();
+
+            _context.Usuarios.Remove(usuario);
+            _context.SaveChanges();
+            return NoContent();
+        }
+
+        [HttpGet("conexao")]
+        public IActionResult TestarConexao()
+        {
+            try
+            {
+                if (_context.Database.CanConnect())
+                {
+                    return Ok("Conexão com o banco de dados OK!");
+                }
+                else
+                {
+                    return StatusCode(500, "Falha ao conectar ao banco de dados.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao conectar: {ex.Message}");
+            }
         }
     }
 }
