@@ -54,25 +54,5 @@ namespace PIM4_backend.Controllers
             _context.SaveChanges();
             return NoContent();
         }
-
-        [HttpGet("conexao")]
-        public IActionResult TestarConexao()
-        {
-            try
-            {
-                if (_context.Database.CanConnect())
-                {
-                    return Ok("Conexão com o banco de dados OK!");
-                }
-                else
-                {
-                    return StatusCode(500, "Falha ao conectar ao banco de dados.");
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Erro ao conectar: {ex.Message}");
-            }
-        }
     }
 }

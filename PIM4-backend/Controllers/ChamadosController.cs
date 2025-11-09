@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PIM4_backend.Data;
+using PIM4_backend.DTO;
 using PIM4_backend.Models;
+using System.Security.Claims;
 
 namespace PIM4_backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ChamadosController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -16,56 +20,108 @@ namespace PIM4_backend.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public IActionResult GetAll()
+        [HttpGet("meus")]
+        [Authorize(Roles = "Colaborador")]
+        public async Task<IActionResult> GetMeusChamados()
         {
-            var chamados = _context.Chamados
-                .Include(c => c.UsuarioSolicitante)
-                .Include(c => c.TecnicoResponsavel)
-                .ToList();
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var chamados = await _context.Chamados
+                .Where(c => c.IdUsuarioSolicitante == userId)
+                .OrderByDescending(c => c.DataAbertura)
+                .Select(c => new ChamadoDTO
+                {
+                    IdChamado = c.IdChamado,
+                    Titulo = c.Titulo,
+                    Descricao = c.Descricao,
+                    Prioridade = c.Prioridade,
+                    DataAbertura = c.DataAbertura,
+                    DataFechamento = c.DataFechamento,
+                    IdCategoria = c.IdCategoria,
+                    IdUsuarioSolicitante = c.IdUsuarioSolicitante,
+                    IdTecnicoResponsavel = c.IdTecnicoResponsavel,
+                    IdStatus = c.IdStatus
+                })
+                .ToListAsync();
 
             return Ok(chamados);
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
-        {
-            var chamado = _context.Chamados
-                .Include(c => c.UsuarioSolicitante)
-                .Include(c => c.TecnicoResponsavel)
-                .FirstOrDefault(c => c.IdChamado == id);
-
-            return chamado == null ? NotFound() : Ok(chamado);
-        }
-
         [HttpPost]
-        public IActionResult Create(Chamado chamado)
+        [Authorize(Roles = "Colaborador")]
+        public async Task<IActionResult> AbrirNovoChamado([FromBody] NovoChamadoDTO dto)
         {
-            _context.Chamados.Add(chamado);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetById), new { id = chamado.IdChamado }, chamado);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var novoChamado = new Chamado
+            {
+                Titulo = dto.Titulo,
+                Descricao = dto.Descricao,
+                IdCategoria = dto.IdCategoria,
+                IdUsuarioSolicitante = userId,
+                DataAbertura = DateTime.Now,
+                IdStatus = 1,
+                Prioridade = 1
+            };
+
+            _context.Chamados.Add(novoChamado);
+            await _context.SaveChangesAsync();
+
+            return Ok(novoChamado);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, Chamado chamado)
+        [HttpGet("todos")]
+        [Authorize(Roles = "Tecnico")]
+        public async Task<IActionResult> GetTodosChamados()
         {
-            var existing = _context.Chamados.Find(id);
-            if (existing == null) return NotFound();
+            var chamados = await _context.Chamados
+                .OrderByDescending(c => c.DataAbertura)
+                .Select(c => new ChamadoDTO
+                {
+                    IdChamado = c.IdChamado,
+                    Titulo = c.Titulo,
+                    Descricao = c.Descricao,
+                    Prioridade = c.Prioridade,
+                    DataAbertura = c.DataAbertura,
+                    DataFechamento = c.DataFechamento,
+                    IdCategoria = c.IdCategoria,
+                    IdUsuarioSolicitante = c.IdUsuarioSolicitante,
+                    IdTecnicoResponsavel = c.IdTecnicoResponsavel,
+                    IdStatus = c.IdStatus
+                })
+                .ToListAsync();
 
-            _context.Entry(existing).CurrentValues.SetValues(chamado);
-            _context.SaveChanges();
+            return Ok(chamados);
+        }
+
+        [HttpPut("{id}/assumir")]
+        [Authorize(Roles = "Tecnico")]
+        public async Task<IActionResult> AssumirChamado(int id)
+        {
+            var tecnicoId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var chamado = await _context.Chamados.FindAsync(id);
+
+            if (chamado == null) return NotFound();
+
+            chamado.IdTecnicoResponsavel = tecnicoId;
+            chamado.IdStatus = 2;
+            await _context.SaveChangesAsync();
+
             return Ok(chamado);
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpPut("{id}/finalizar")]
+        [Authorize(Roles = "Tecnico")]
+        public async Task<IActionResult> FinalizarChamado(int id)
         {
-            var chamado = _context.Chamados.Find(id);
+            var chamado = await _context.Chamados.FindAsync(id);
             if (chamado == null) return NotFound();
 
-            _context.Chamados.Remove(chamado);
-            _context.SaveChanges();
-            return NoContent();
+            chamado.IdStatus = 3;
+            chamado.DataFechamento = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            return Ok(chamado);
         }
     }
 }

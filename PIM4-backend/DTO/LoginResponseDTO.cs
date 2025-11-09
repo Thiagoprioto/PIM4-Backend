@@ -1,12 +1,11 @@
 ﻿namespace PIM4_backend.DTO
 {
-    public class UsuarioDTO
+    // O que esta API DEVOLVE para o App Mobile
+    public class LoginResponseDTO
     {
-        public int IdUsuario { get; set; }
+        public string? Token { get; set; }
         public string? Nome { get; set; }
         public string? Email { get; set; }
-        public string? SenhaHash { get; set; }
         public string? Perfil { get; set; }
-        public int? IdDepartamento { get; set; }
     }
 }
