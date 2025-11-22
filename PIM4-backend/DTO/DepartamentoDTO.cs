@@ -1,4 +1,4 @@
-﻿namespace PIM4_backend.DTO // (Verifique o namespace)
+﻿namespace PIM4_backend.DTO
 {
     public class DepartamentoDTO
     {

@@ -14,7 +14,6 @@ namespace PIM4_backend.Data
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<StatusChamado> StatusChamados { get; set; }
         public DbSet<LogAtividade> LogsAtividades { get; set; }
-        public DbSet<RespostaIA> RespostasIA { get; set; }
         public DbSet<Interacao> Interacoes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

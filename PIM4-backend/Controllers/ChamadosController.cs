@@ -14,11 +14,17 @@ namespace PIM4_backend.Controllers
     public class ChamadosController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration; // Necessário para a injeção de dependência
 
-        public ChamadosController(ApplicationDbContext context)
+        public ChamadosController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
+
+        // ==========================================================
+        // ENDPOINTS COLABORADOR
+        // ==========================================================
 
         [HttpGet("meus")]
         [Authorize(Roles = "Colaborador")]
@@ -34,7 +40,7 @@ namespace PIM4_backend.Controllers
                     IdChamado = c.IdChamado,
                     Titulo = c.Titulo,
                     Descricao = c.Descricao,
-                    Prioridade = c.Prioridade,
+                    Prioridade = c.Prioridade, // Retorna a string (Ex: "Baixa", "Média")
                     DataAbertura = c.DataAbertura,
                     DataFechamento = c.DataFechamento,
                     IdCategoria = c.IdCategoria,
@@ -61,7 +67,7 @@ namespace PIM4_backend.Controllers
                 IdUsuarioSolicitante = userId,
                 DataAbertura = DateTime.Now,
                 IdStatus = 1,
-                Prioridade = 1
+                Prioridade = dto.Prioridade
             };
 
             _context.Chamados.Add(novoChamado);
@@ -69,6 +75,10 @@ namespace PIM4_backend.Controllers
 
             return Ok(novoChamado);
         }
+
+        // ==========================================================
+        // ENDPOINTS TÉCNICO
+        // ==========================================================
 
         [HttpGet("todos")]
         [Authorize(Roles = "Tecnico")]
@@ -104,7 +114,7 @@ namespace PIM4_backend.Controllers
             if (chamado == null) return NotFound();
 
             chamado.IdTecnicoResponsavel = tecnicoId;
-            chamado.IdStatus = 2;
+            chamado.IdStatus = 2; // Status: Em Andamento
             await _context.SaveChangesAsync();
 
             return Ok(chamado);
@@ -117,7 +127,7 @@ namespace PIM4_backend.Controllers
             var chamado = await _context.Chamados.FindAsync(id);
             if (chamado == null) return NotFound();
 
-            chamado.IdStatus = 3;
+            chamado.IdStatus = 3; // Status: Fechado
             chamado.DataFechamento = DateTime.Now;
             await _context.SaveChangesAsync();
 

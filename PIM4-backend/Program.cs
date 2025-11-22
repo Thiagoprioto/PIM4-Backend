@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using PIM4_backend.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer; // <-- 1. PRECISA DESTE
-using Microsoft.IdentityModel.Tokens; // <-- 2. PRECISA DESTE
-using System.Text; // <-- 3. PRECISA DESTE
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 

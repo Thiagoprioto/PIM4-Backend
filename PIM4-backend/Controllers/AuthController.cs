@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PIM4_backend.Data;
-using PIM4_backend.DTO; // (Usando sua pasta DTO)
+using PIM4_backend.DTO;
 using PIM4_backend.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

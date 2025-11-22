@@ -52,7 +52,7 @@ namespace PIM4_backend.Controllers
         // POST: /api/Interacoes
         // ==========================================================
         [HttpPost]
-        [Authorize(Roles = "Tecnico")] // Só o Técnico pode escrever
+        [Authorize(Roles = "Tecnico, Colaborador")] // Só o Técnico pode escrever
         public async Task<IActionResult> AdicionarInteracao([FromBody] ComentarioDTO dto)
         {
             // Pega o ID do técnico que está logado (do Token)

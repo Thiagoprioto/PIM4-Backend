@@ -17,7 +17,9 @@ namespace PIM4_backend.Models
 
         public string Descricao { get; set; }
 
-        public int Prioridade { get; set; }
+        [Required]
+        [StringLength(50)]
+        public string Prioridade { get; set; }
 
         public DateTime DataAbertura { get; set; }
         public DateTime? DataFechamento { get; set; }
@@ -34,14 +36,9 @@ namespace PIM4_backend.Models
 
         [ForeignKey("IdUsuarioSolicitante")]
         public virtual Usuario UsuarioSolicitante { get; set; }
-        // -------------------------
-
-        // (Isto já estava correto e é ótimo!)
         public int? IdTecnicoResponsavel { get; set; }
         [ForeignKey("IdTecnicoResponsavel")]
         public virtual Usuario TecnicoResponsavel { get; set; }
-
-        public virtual ICollection<RespostaIA> RespostasIA { get; set; }
         public virtual ICollection<Interacao> Interacoes { get; set; }
     }
 }
