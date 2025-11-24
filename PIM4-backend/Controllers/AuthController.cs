@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PIM4_backend.Data;
@@ -48,6 +49,32 @@ namespace PIM4_backend.Controllers
                 Email = usuario.Email,
                 Perfil = usuario.Perfil // A parte mais importante!
             });
+        }
+
+        [HttpPost("register")]
+        [Authorize(Roles = "Tecnico")]
+        public async Task<IActionResult> Register([FromBody] CadastroUsuarioCompletoDTO dto)
+        {
+            // 1. Valida se o e-mail já existe
+            if (await _context.Usuarios.AnyAsync(u => u.Email == dto.Email))
+            {
+                return BadRequest("Este e-mail já está em uso.");
+            }
+
+            // 2. Cria o Utilizador
+            var novoUsuario = new Usuario
+            {
+                Nome = dto.Nome,
+                Email = dto.Email,
+                SenhaHash = dto.Senha,
+                Perfil = dto.Perfil,
+                IdDepartamento = dto.IdDepartamento
+            };
+
+            _context.Usuarios.Add(novoUsuario);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Colaborador cadastrado com sucesso!" });
         }
 
         private string GenerateJwtToken(Usuario usuario)
